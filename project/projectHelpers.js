@@ -2,7 +2,9 @@ const db = require('../data/db-config.js');
 
 module.exports = {
     get,
-    add
+    add,
+    getProjectById,
+    getById
 }
 
 // - `getRecipes()`: should return a list of all recipes in the database.
@@ -15,4 +17,16 @@ function get(table) {
 
 function add(table, load) {
     return db(table).insert(load)
+}
+
+function getById(id) {
+    return db('projects').where({ id: id }).first()
+}
+
+function getProjectById(id) {
+    return db('projects as p')
+        .join('tasks as t', 't.project_id', 'p.id')
+        .where({ project_id: id })
+        .select('t.taskDescription', 'p.id', 'p.projectName', 'p.projectDescription', 'p.projectCompleted')
+
 }

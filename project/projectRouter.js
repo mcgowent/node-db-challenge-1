@@ -86,4 +86,20 @@ router.post('/resources', (req, res) => {
         });
 })
 
+
+/**===========Stretch======================== */
+
+router.get('/:id', (req, res) => {
+    const { id } = req.params
+
+    db.getProjectById(id)
+        .then(data => {
+
+            res.json(data);
+        })
+        .catch(err => {
+            res.status(500).json({ message: 'Failed to get Project' });
+        });
+})
+
 module.exports = router;
