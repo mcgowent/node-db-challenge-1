@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
 })
 
 router.get('/tasks', (req, res) => {
-    db.get('tasks')
+    db.getTasks('tasks')
         .then(data => {
             data.map(e => {
                 if (!e.projectCompleted) {
@@ -90,15 +90,14 @@ router.post('/resources', (req, res) => {
 /**===========Stretch======================== */
 
 router.get('/:id', (req, res) => {
-    const { id } = req.params
+    // const { id } = req.params
 
-    db.getProjectById(id)
+    db.getProjectTasks(req.params.id)
         .then(data => {
-
             res.json(data);
         })
         .catch(err => {
-            res.status(500).json({ message: 'Failed to get Project' });
+            res.status(500).json({ message: 'Failed to get Full Project' });
         });
 })
 
