@@ -6,14 +6,16 @@ const router = express.Router();
 router.get('/', (req, res) => {
     db.get('projects')
         .then(data => {
-            if (!data.projectCompleted) {
-                data.projectCompleted = 'False'
-                res.json(data);
-            } else {
-                data.projectCompleted = 'True'
-                res.json(data);
-            }
-
+            data.map(e => {
+                if (!e.projectCompleted) {
+                    return e.projectCompleted = "False"
+                } else if (e.projectCompleted) {
+                    return e.projectCompleted = "True"
+                } else {
+                    return e;
+                }
+            })
+            res.json(data);
         })
         .catch(err => {
             res.status(500).json({ message: 'Failed to get projects' });
@@ -23,6 +25,15 @@ router.get('/', (req, res) => {
 router.get('/tasks', (req, res) => {
     db.get('tasks')
         .then(data => {
+            data.map(e => {
+                if (!e.projectCompleted) {
+                    return e.taskCompleted = "False"
+                } else if (e.taskCompleted) {
+                    return e.taskCompleted = "True"
+                } else {
+                    return e;
+                }
+            })
             res.json(data);
         })
         .catch(err => {
