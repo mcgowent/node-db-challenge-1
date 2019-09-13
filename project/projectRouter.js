@@ -88,17 +88,47 @@ router.post('/resources', (req, res) => {
 
 
 /**===========Stretch======================== */
-
+// Gets basic data about a project
 router.get('/:id', (req, res) => {
-    // const { id } = req.params
+    const { id } = req.params
 
-    db.getProjectTasks(req.params.id)
+    db.getById(id)
         .then(data => {
             res.json(data);
         })
         .catch(err => {
             res.status(500).json({ message: 'Failed to get Full Project' });
         });
+})
+// Gets Full data about a project
+router.get('/:id/full', (req, res) => {
+    // I need to create a var that holds three db calls
+    // I need to make those calls
+    console.log('I was called.')
+    const { id } = req.params
+    db.getById(id)
+        .then(project => {
+            let projectFull = project
+            console.log('PROJECTFULL AT THE START:', projectFull)
+            console.log('Projects Object', project)
+            db.getTasksList(id)
+                .then(tasks => {
+                    projectFull.tasks = tasks
+                    console.log('Tasks Object', tasks)
+                    db.getResources(id)
+                        .then(resources => {
+                            projectFull.resources = resources
+                            console.log('Resources Object', resources)
+                            console.log('AT THE END OF THE ARRAY projectFULL:', projectFull)
+                            res.json(projectFull)
+                        })
+                })
+        })
+        .catch(err => {
+            res.status(500).json(err)
+        })
+
+
 })
 
 module.exports = router;
